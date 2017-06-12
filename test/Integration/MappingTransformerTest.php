@@ -1,6 +1,7 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Porter\Transform\Mapping;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Porter\Collection\PorterRecords;
@@ -12,6 +13,8 @@ use ScriptFUSION\Porter\Transform\Mapping\MappingTransformer;
 
 final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Porter
      */
@@ -25,7 +28,7 @@ final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
     public function testMappingTransformer()
     {
         $records = $this->porter->import(
-            (new StaticDataImportSpecification(\Mockery::mock(\Iterator::class)))
+            (new StaticDataImportSpecification(new \EmptyIterator))
                 ->addTransformer(
                     (new MappingTransformer($mapping = \Mockery::mock(Mapping::class)))
                         ->setMapper(
