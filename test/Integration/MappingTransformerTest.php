@@ -10,6 +10,7 @@ use ScriptFUSION\Porter\Specification\StaticDataImportSpecification;
 use ScriptFUSION\Porter\Transform\Mapping\Collection\CountableMappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\Collection\MappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\MappingTransformer;
+use ScriptFUSIONTest\FixtureFactory;
 
 final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +23,7 @@ final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->porter = new Porter;
+        $this->porter = FixtureFactory::createPorter();
     }
 
     public function testMappingTransformer()
