@@ -9,7 +9,7 @@
   ],
   "license": "LGPL-3.0",
   "require": {
-    "scriptfusion/porter": "4.0.x-dev",
+    "scriptfusion/porter": "^3|^4",
     "scriptfusion/mapper": "^1|^2"
   },
   "require-dev": {

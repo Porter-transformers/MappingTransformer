@@ -15,12 +15,12 @@ final class SubImportTest extends \PHPUnit_Framework_TestCase
         $record = 'foo';
 
         $import = new SubImport(function () use ($record) {
-            return new StaticDataImportSpecification(new \ArrayIterator([$record]));
+            return new StaticDataImportSpecification(new \ArrayIterator([[$record]]));
         });
         $import->setPorter(FixtureFactory::createPorter());
 
         $records = $import(null);
 
-        self::assertSame($record, $records[0]);
+        self::assertSame([$record], $records[0]);
     }
 }
