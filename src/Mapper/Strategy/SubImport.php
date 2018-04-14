@@ -22,7 +22,7 @@ class SubImport implements Strategy, PorterAware
      */
     public function __construct($specificationOrCallback)
     {
-        if (!$specificationOrCallback instanceof ImportSpecification && !is_callable($specificationOrCallback)) {
+        if (!$specificationOrCallback instanceof ImportSpecification && !\is_callable($specificationOrCallback)) {
             throw new \InvalidArgumentException('Argument one must be an instance of ImportSpecification or callable.');
         }
 
@@ -47,7 +47,7 @@ class SubImport implements Strategy, PorterAware
             return $this->specificationOrCallback;
         }
 
-        if (($specification = call_user_func($this->specificationOrCallback, $data, $context))
+        if (($specification = ($this->specificationOrCallback)($data, $context))
             instanceof ImportSpecification
         ) {
             return $specification;
