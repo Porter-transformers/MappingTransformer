@@ -1,14 +1,17 @@
 <?php
 namespace ScriptFUSION\Porter\Transform\Mapping;
 
-use Amp\Promise;
-use Amp\Success;
+use Amp\Iterator;
+use Amp\Producer;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapping;
+use ScriptFUSION\Porter\Collection\AsyncRecordCollection;
 use ScriptFUSION\Porter\Collection\RecordCollection;
 use ScriptFUSION\Porter\PorterAware;
 use ScriptFUSION\Porter\PorterAwareTrait;
 use ScriptFUSION\Porter\Transform\AsyncTransformer;
+use ScriptFUSION\Porter\Transform\Mapping\Collection\AsyncMappedRecords;
+use ScriptFUSION\Porter\Transform\Mapping\Collection\CountableAsyncMappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\Collection\CountableMappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\Collection\MappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\Mapper\PorterMapper;
@@ -48,19 +51,36 @@ class MappingTransformer implements Transformer, AsyncTransformer, PorterAware
         );
     }
 
-    public function transformAsync(array $record, $context): Promise
+    public function transformAsync(AsyncRecordCollection $records, $context): AsyncRecordCollection
     {
-        return new Success($this->getOrCreateMapper()->map($record, $this->mapping, $context));
+        return $this->createAsyncMappedRecords(
+            new Producer(function (\Closure $emit) use ($records, $context): \Generator {
+                while (yield $records->advance()) {
+                    yield $emit($this->getOrCreateMapper()->map($records->getCurrent(), $this->mapping, $context));
+                }
+            }),
+            $records,
+            $this->mapping
+        );
     }
 
     private function createMappedRecords(\Iterator $records, RecordCollection $previous, Mapping $mapping)
     {
         // Copy count of previous collection because a mapping operation cannot modify the number of records.
         if ($previous instanceof \Countable) {
-            return new CountableMappedRecords($records, count($previous), $previous, $mapping);
+            return new CountableMappedRecords($records, \count($previous), $previous, $mapping);
         }
 
         return new MappedRecords($records, $previous, $mapping);
+    }
+
+    private function createAsyncMappedRecords(Iterator $records, AsyncRecordCollection $previous, Mapping $mapping)
+    {
+        if ($previous instanceof \Countable) {
+            return new CountableAsyncMappedRecords($records, \count($previous), $previous, $mapping);
+        }
+
+        return new AsyncMappedRecords($records, $previous, $mapping);
     }
 
     private function getOrCreateMapper(): CollectionMapper
@@ -68,11 +88,6 @@ class MappingTransformer implements Transformer, AsyncTransformer, PorterAware
         return $this->mapper ?: $this->mapper = new PorterMapper($this->getPorter());
     }
 
-    /**
-     * @param CollectionMapper $mapper
-     *
-     * @return $this
-     */
     public function setMapper(CollectionMapper $mapper): self
     {
         $this->mapper = $mapper;
