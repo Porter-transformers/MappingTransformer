@@ -2,6 +2,7 @@
 namespace ScriptFUSIONTest\Unit\Porter\Transform\Mapping\Mapper;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 use ScriptFUSION\Porter\Collection\RecordCollection;
@@ -12,7 +13,7 @@ use ScriptFUSION\Porter\Transform\Mapping\Mapper\PorterMapper;
 /**
  * @see PorterMapper
  */
-final class PorterMapperTest extends \PHPUnit_Framework_TestCase
+final class PorterMapperTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

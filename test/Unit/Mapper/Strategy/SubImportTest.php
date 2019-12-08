@@ -3,6 +3,7 @@ namespace ScriptFUSIONTest\Unit\Porter\Transform\Mapping\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Porter\Collection\PorterRecords;
 use ScriptFUSION\Porter\Collection\ProviderRecords;
 use ScriptFUSION\Porter\Porter;
@@ -14,7 +15,7 @@ use ScriptFUSION\Porter\Transform\Mapping\Mapper\Strategy\SubImport;
 /**
  * @see SubImport
  */
-final class SubImportTest extends \PHPUnit_Framework_TestCase
+final class SubImportTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -31,7 +32,7 @@ final class SubImportTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidCreate(): void
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->createSubImport(true);
     }
@@ -77,7 +78,7 @@ final class SubImportTest extends \PHPUnit_Framework_TestCase
             // Intentionally empty.
         });
 
-        $this->setExpectedException(InvalidCallbackResultException::class);
+        $this->expectException(InvalidCallbackResultException::class);
 
         $this->import();
     }

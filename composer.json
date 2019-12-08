@@ -9,12 +9,12 @@
   ],
   "license": "LGPL-3.0",
   "require": {
-    "scriptfusion/porter": "5.0.x-dev",
-    "scriptfusion/mapper": "^1|^2"
+    "scriptfusion/mapper": "^1|^2",
+    "scriptfusion/porter": "^5"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.8",
-    "mockery/mockery": "^1"
+    "mockery/mockery": "^1.3",
+    "phpunit/phpunit": "^7"
   },
   "autoload": {
     "psr-4": {
@@ -28,5 +28,8 @@
   },
   "scripts": {
     "test": "phpunit -c test"
+  },
+  "config": {
+    "sort-packages": true
   }
 }

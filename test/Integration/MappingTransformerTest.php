@@ -2,6 +2,7 @@
 namespace ScriptFUSIONTest\Integration\Porter\Transform\Mapping;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Porter\Collection\PorterRecords;
@@ -12,7 +13,7 @@ use ScriptFUSION\Porter\Transform\Mapping\Collection\MappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\MappingTransformer;
 use ScriptFUSIONTest\FixtureFactory;
 
-final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
+final class MappingTransformerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
