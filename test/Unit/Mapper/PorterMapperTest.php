@@ -16,7 +16,7 @@ final class PorterMapperTest extends \PHPUnit_Framework_TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testMap()
+    public function testMap(): void
     {
         $mapper = new PorterMapper($porter = \Mockery::mock(Porter::class));
 

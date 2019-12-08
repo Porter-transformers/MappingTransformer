@@ -9,7 +9,7 @@ final class FixtureFactory
 {
     use StaticClass;
 
-    public static function createPorter()
+    public static function createPorter(): Porter
     {
         return new Porter(
             \Mockery::mock(ContainerInterface::class)

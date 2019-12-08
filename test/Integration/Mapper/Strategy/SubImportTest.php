@@ -10,7 +10,7 @@ use ScriptFUSIONTest\FixtureFactory;
  */
 final class SubImportTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSpecificationCallbackCanCreateSpecification()
+    public function testSpecificationCallbackCanCreateSpecification(): void
     {
         $record = 'foo';
 

@@ -26,7 +26,7 @@ final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
         $this->porter = FixtureFactory::createPorter();
     }
 
-    public function testMappingTransformer()
+    public function testMappingTransformer(): void
     {
         $records = $this->porter->import(
             (new StaticDataImportSpecification(new \EmptyIterator))
@@ -35,12 +35,13 @@ final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
                         ->setMapper(
                             \Mockery::mock(CollectionMapper::class)
                                 ->shouldReceive('mapCollection')
-                                ->with(
-                                    \Mockery::type(\Iterator::class),
-                                    \Mockery::type(Mapping::class),
-                                    \Mockery::any())
-                                ->once()
-                                ->andReturn(new \ArrayIterator([$result = ['foo' => 'bar']]))
+                                    ->with(
+                                        \Mockery::type(\Iterator::class),
+                                        \Mockery::type(Mapping::class),
+                                        \Mockery::any()
+                                    )
+                                    ->once()
+                                    ->andReturn(new \ArrayIterator([$result = ['foo' => 'bar']]))
                                 ->getMock()
                         )
                 )
@@ -58,7 +59,7 @@ final class MappingTransformerTest extends \PHPUnit_Framework_TestCase
      * Tests that when the resource is countable, the count is propagated to the outermost collection via a mapped
      * collection.
      */
-    public function testImportAndMapCountableRecords()
+    public function testImportAndMapCountableRecords(): void
     {
         $records = $this->porter->import(
             (new StaticDataImportSpecification(
