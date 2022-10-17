@@ -59,8 +59,8 @@ $records = $porter->import(
   [Version image]: https://poser.pugx.org/transformers/mapping-transformer/version "Latest version"
   [Downloads]: https://packagist.org/packages/transformers/mapping-transformer
   [Downloads image]: https://poser.pugx.org/transformers/mapping-transformer/downloads "Total downloads"
-  [Build]: https://travis-ci.org/Porter-transformers/MappingTransformer
-  [Build image]: https://travis-ci.org/Porter-transformers/MappingTransformer.svg?branch=master "Build status"
+  [Build]: https://github.com/Porter-transformers/MappingTransformer/actions/workflows/Tests.yaml
+  [Build image]: https://github.com/Porter-transformers/MappingTransformer/actions/workflows/Tests.yaml/badge.svg "Build status"
   [Coverage]: https://coveralls.io/github/Porter-transformers/MappingTransformer
   [Coverage image]: https://coveralls.io/repos/github/Porter-transformers/MappingTransformer/badge.svg "Test coverage"
   [Style]: https://styleci.io/repos/76782166

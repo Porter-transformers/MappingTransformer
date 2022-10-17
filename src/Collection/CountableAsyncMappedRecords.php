@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ScriptFUSION\Porter\Transform\Mapping\Collection;
 
-use Amp\Iterator;
 use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Porter\Collection\AsyncRecordCollection;
 use ScriptFUSION\Porter\Collection\CountableRecordsTrait;
@@ -13,7 +12,7 @@ class CountableAsyncMappedRecords extends AsyncMappedRecords implements \Countab
     use CountableRecordsTrait;
 
     public function __construct(
-        Iterator $records,
+        \Iterator $records,
         int $count,
         AsyncRecordCollection $previousCollection,
         Mapping $mapping

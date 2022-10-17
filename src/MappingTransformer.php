@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace ScriptFUSION\Porter\Transform\Mapping;
 
-use Amp\Iterator;
-use Amp\Producer;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Porter\Collection\AsyncRecordCollection;
@@ -54,11 +54,11 @@ class MappingTransformer implements Transformer, AsyncTransformer, PorterAware
     public function transformAsync(AsyncRecordCollection $records, $context): AsyncRecordCollection
     {
         return $this->createAsyncMappedRecords(
-            new Producer(function (\Closure $emit) use ($records, $context): \Generator {
-                while (yield $records->advance()) {
-                    yield $emit($this->getOrCreateMapper()->map($records->getCurrent(), $this->mapping, $context));
+            (function () use ($records, $context): \Generator {
+                foreach ($records as $record) {
+                    yield $this->getOrCreateMapper()->map($record, $this->mapping, $context);
                 }
-            }),
+            })(),
             $records,
             $this->mapping
         );
@@ -74,7 +74,7 @@ class MappingTransformer implements Transformer, AsyncTransformer, PorterAware
         return new MappedRecords($records, $previous, $mapping);
     }
 
-    private function createAsyncMappedRecords(Iterator $records, AsyncRecordCollection $previous, Mapping $mapping)
+    private function createAsyncMappedRecords(\Iterator $records, AsyncRecordCollection $previous, Mapping $mapping)
     {
         if ($previous instanceof \Countable) {
             return new CountableAsyncMappedRecords($records, \count($previous), $previous, $mapping);

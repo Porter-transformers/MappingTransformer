@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace ScriptFUSIONTest\Integration\Porter\Transform\Mapping;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -17,12 +19,9 @@ final class MappingTransformerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Porter
-     */
-    private $porter;
+    private Porter $porter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->porter = FixtureFactory::createPorter();
     }
@@ -64,8 +63,12 @@ final class MappingTransformerTest extends TestCase
     {
         $records = $this->porter->import(
             (new StaticDataImportSpecification(
-                new \ArrayIterator(range(1, $count = 10))
-            ))->addTransformer(new MappingTransformer(\Mockery::mock(Mapping::class)))
+                new \ArrayIterator(array_map(fn ($i) => [$i], range(1, $count = 10)))
+            ))->addTransformer(new MappingTransformer(
+                \Mockery::spy(Mapping::class)
+                    ->shouldReceive('toArray')->andReturn([])
+                ->getMock()
+            ))
         );
 
         self::assertInstanceOf(CountableMappedRecords::class, $records->getPreviousCollection());
