@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Porter\Collection\PorterRecords;
+use ScriptFUSION\Porter\Import\StaticImport;
 use ScriptFUSION\Porter\Porter;
-use ScriptFUSION\Porter\Specification\StaticDataImportSpecification;
 use ScriptFUSION\Porter\Transform\Mapping\Collection\CountableMappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\Collection\MappedRecords;
 use ScriptFUSION\Porter\Transform\Mapping\MappingTransformer;
@@ -29,7 +29,7 @@ final class MappingTransformerTest extends TestCase
     public function testMappingTransformer(): void
     {
         $records = $this->porter->import(
-            (new StaticDataImportSpecification(new \EmptyIterator))
+            (new StaticImport(new \EmptyIterator))
                 ->addTransformer(
                     (new MappingTransformer($mapping = \Mockery::mock(Mapping::class)))
                         ->setMapper(
@@ -62,7 +62,7 @@ final class MappingTransformerTest extends TestCase
     public function testImportAndMapCountableRecords(): void
     {
         $records = $this->porter->import(
-            (new StaticDataImportSpecification(
+            (new StaticImport(
                 new \ArrayIterator(array_map(fn ($i) => [$i], range(1, $count = 10)))
             ))->addTransformer(new MappingTransformer(
                 \Mockery::spy(Mapping::class)

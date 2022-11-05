@@ -9,14 +9,11 @@ use ScriptFUSION\Porter\PorterAware;
 
 class PorterMapper extends CollectionMapper
 {
-    private $porter;
-
-    public function __construct(Porter $porter)
+    public function __construct(private readonly Porter $porter)
     {
-        $this->porter = $porter;
     }
 
-    protected function injectDependencies($object)
+    protected function injectDependencies($object): void
     {
         parent::injectDependencies($object);
 

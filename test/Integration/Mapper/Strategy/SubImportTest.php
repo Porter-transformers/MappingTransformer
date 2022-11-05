@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ScriptFUSIONTest\Integration\Porter\Transform\Mapping\Mapper\Strategy;
 
 use PHPUnit\Framework\TestCase;
-use ScriptFUSION\Porter\Specification\StaticDataImportSpecification;
+use ScriptFUSION\Porter\Import\StaticImport;
 use ScriptFUSION\Porter\Transform\Mapping\Mapper\Strategy\SubImport;
 use ScriptFUSIONTest\FixtureFactory;
 
@@ -18,7 +18,7 @@ final class SubImportTest extends TestCase
         $record = 'foo';
 
         $import = new SubImport(function () use ($record) {
-            return new StaticDataImportSpecification(new \ArrayIterator([[$record]]));
+            return new StaticImport(new \ArrayIterator([[$record]]));
         });
         $import->setPorter(FixtureFactory::createPorter());
 

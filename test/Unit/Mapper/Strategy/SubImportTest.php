@@ -21,11 +21,8 @@ final class SubImportTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var MockInterface|SubImport */
-    private $subImport;
-
-    /** @var MockInterface|Porter */
-    private $porter;
+    private SubImport|MockInterface $subImport;
+    private Porter|MockInterface $porter;
 
     protected function setUp(): void
     {
@@ -34,7 +31,7 @@ final class SubImportTest extends TestCase
 
     public function testInvalidCreate(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
 
         $this->createSubImport(true);
     }
@@ -46,9 +43,7 @@ final class SubImportTest extends TestCase
         $this->mockPorter(
             new \ArrayIterator(
                 $array = array_map(
-                    function ($int) {
-                        return [$int];
-                    },
+                    fn ($int) => [$int],
                     range(1, 5)
                 )
             )
@@ -76,9 +71,7 @@ final class SubImportTest extends TestCase
      */
     public function testInvalidSpecificationCallback(): void
     {
-        $this->createSubImport(static function () {
-            // Intentionally empty.
-        });
+        $this->createSubImport(fn () => null);
 
         $this->expectException(InvalidCallbackResultException::class);
 
@@ -112,7 +105,7 @@ final class SubImportTest extends TestCase
 
     private function import($data = null, $context = null)
     {
-        $this->subImport->setPorter($this->porter ?: $this->mockPorter());
+        $this->subImport->setPorter($this->porter ?? $this->mockPorter());
 
         return ($this->subImport)($data, $context);
     }
