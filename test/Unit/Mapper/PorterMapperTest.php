@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 use ScriptFUSION\Porter\Collection\RecordCollection;
-use ScriptFUSION\Porter\Porter;
 use ScriptFUSION\Porter\PorterAware;
 use ScriptFUSION\Porter\Transform\Mapping\Mapper\PorterMapper;
+use ScriptFUSIONTest\FixtureFactory;
 
 /**
  * @see PorterMapper
@@ -21,7 +21,7 @@ final class PorterMapperTest extends TestCase
 
     public function testMap(): void
     {
-        $mapper = new PorterMapper($porter = \Mockery::mock(Porter::class));
+        $mapper = new PorterMapper($porter = FixtureFactory::createPorter());
 
         /** @var RecordCollection $records */
         $records = \Mockery::mock(

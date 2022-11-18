@@ -13,11 +13,11 @@ class SubImport implements Strategy, PorterAware
     use PorterAwareTrait;
 
     /**
-     * Initializes this instance with the specified import specification or specification callback.
+     * Initializes this instance with the specified import instance or import callback.
      *
-     * @param Import|\Closure $importOrCallback Import specification or callback returning such a specification.
+     * @param Import|\Closure $importOrCallback Import instance or callback returning such an instance.
      *
-     * @throws \InvalidArgumentException Specification is not an ImportSpecification or callable.
+     * @throws \InvalidArgumentException Import is neither an Import instance nor closure.
      */
     public function __construct(private readonly Import|\Closure $importOrCallback)
     {
@@ -25,7 +25,7 @@ class SubImport implements Strategy, PorterAware
 
     public function __invoke($data, $context = null)
     {
-        $specification = clone $this->getOrCreateImportSpecification($data, $context);
+        $specification = clone $this->getOrCreateImport($data, $context);
         $specification->setContext($context);
 
         $generator = $this->getPorter()->import($specification);
@@ -35,7 +35,7 @@ class SubImport implements Strategy, PorterAware
         }
     }
 
-    private function getOrCreateImportSpecification($data, $context = null): Import
+    private function getOrCreateImport($data, $context = null): Import
     {
         if ($this->importOrCallback instanceof Import) {
             return $this->importOrCallback;

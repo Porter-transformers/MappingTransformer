@@ -6,13 +6,12 @@ namespace ScriptFUSIONTest\Unit\Porter\Transform\Mapping\Mapper\Strategy;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use ScriptFUSION\Porter\Collection\PorterRecords;
-use ScriptFUSION\Porter\Collection\ProviderRecords;
+use ScriptFUSION\Porter\Import\Import;
+use ScriptFUSION\Porter\Import\StaticImport;
 use ScriptFUSION\Porter\Porter;
-use ScriptFUSION\Porter\Provider\Resource\ProviderResource;
-use ScriptFUSION\Porter\Transform\Mapping\Mapper\MockFactory;
 use ScriptFUSION\Porter\Transform\Mapping\Mapper\Strategy\InvalidCallbackResultException;
 use ScriptFUSION\Porter\Transform\Mapping\Mapper\Strategy\SubImport;
+use ScriptFUSIONTest\FixtureFactory;
 
 /**
  * @see SubImport
@@ -24,52 +23,33 @@ final class SubImportTest extends TestCase
     private SubImport|MockInterface $subImport;
     private Porter|MockInterface $porter;
 
-    protected function setUp(): void
-    {
-        $this->createSubImport();
-    }
-
-    public function testInvalidCreate(): void
-    {
-        $this->expectException(\TypeError::class);
-
-        $this->createSubImport(true);
-    }
-
     public function testImport(): void
     {
-        self::assertNull($this->import());
-
-        $this->mockPorter(
-            new \ArrayIterator(
-                $array = array_map(
-                    fn ($int) => [$int],
-                    range(1, 5)
-                )
-            )
-        );
+        $this->createSubImport(new StaticImport(new \ArrayIterator(
+            $array = array_map(fn ($int) => [$int], range(1, 5))
+        )));
 
         self::assertSame($array, $this->import());
     }
 
-    public function testSpecificationCallback(): void
+    public function testImportCallback(): void
     {
         $this->createSubImport(
-            function ($data, $context) {
-                self::assertSame('foo', $data);
-                self::assertSame('bar', $context);
+            function ($data, $context) use (&$array, &$a, &$b) {
+                self::assertSame($a, $data);
+                self::assertSame($b, $context);
 
-                return MockFactory::mockImportSpecification();
+                return new StaticImport(new \ArrayIterator($array));
             }
         );
 
-        $this->import('foo', 'bar');
+        self::assertSame($array = [['Charlie']], $this->import($a = 'Alfa', $b = 'Bravo'));
     }
 
     /**
-     * Tests that a sub-import callback that does not return an ImportSpecification raises an exception.
+     * Tests that a sub-import callback that does not return an Import instance raises an exception.
      */
-    public function testInvalidSpecificationCallback(): void
+    public function testInvalidImportCallback(): void
     {
         $this->createSubImport(fn () => null);
 
@@ -78,34 +58,14 @@ final class SubImportTest extends TestCase
         $this->import();
     }
 
-    private function createSubImport($specification = null): void
+    private function createSubImport(Import|\Closure $importOrCallback): void
     {
-        $specification = $specification ?: MockFactory::mockImportSpecification();
-
-        $this->subImport = new SubImport($specification);
-    }
-
-    private function mockPorter(\Iterator $return = null): Porter
-    {
-        return $this->porter = \Mockery::mock(Porter::class)
-            ->shouldReceive('import')
-                ->andReturn(
-                    new PorterRecords(
-                        new ProviderRecords(
-                            $return ?? new \EmptyIterator,
-                            \Mockery::mock(ProviderResource::class)
-                        ),
-                        MockFactory::mockImportSpecification()
-                    )
-                )
-                ->byDefault()
-            ->getMock()
-        ;
+        $this->subImport = new SubImport($importOrCallback);
     }
 
     private function import($data = null, $context = null)
     {
-        $this->subImport->setPorter($this->porter ?? $this->mockPorter());
+        $this->subImport->setPorter(FixtureFactory::createPorter());
 
         return ($this->subImport)($data, $context);
     }

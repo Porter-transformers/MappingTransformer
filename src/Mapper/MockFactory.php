@@ -12,7 +12,7 @@ final class MockFactory
 {
     use StaticClass;
 
-    public static function mockImportSpecification(): Import|MockInterface
+    public static function mockImport(): Import|MockInterface
     {
         return \Mockery::mock(Import::class, [\Mockery::mock(ProviderResource::class)]);
     }
